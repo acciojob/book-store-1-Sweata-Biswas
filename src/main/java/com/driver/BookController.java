@@ -59,10 +59,10 @@ public class BookController {
     // pass id as path variable
     // getBookById()
     @GetMapping("/get-book-by-id/{id}")
-    public ResponseEntity<Book> getBookById(@PathVariable() int bookId){
-
+    public ResponseEntity<Book> getBookById(@PathVariable() String bookId){
+        int id = Integer.parseInt(bookId);
         for(Book book : bookList){
-            if(book.getId() == bookId){
+            if(book.getId() == id){
                 return  new ResponseEntity<>(book, HttpStatus.OK);
             }
         }
@@ -73,9 +73,10 @@ public class BookController {
     // pass id as path variable
     // deleteBookById()
     @DeleteMapping("/delete-book-by-id/{id}")
-    public ResponseEntity<String> deleteBookById(@PathVariable("id") int bookId){
+    public ResponseEntity<String> deleteBookById(@PathVariable("id") String bookId){
+        int id = Integer.parseInt(bookId);
         for(Book book : bookList){
-            if(book.getId() == bookId){
+            if(book.getId() == id){
                 bookList.remove(book);
                 return  new ResponseEntity<>("Record Deleted of id "+ bookId,HttpStatus.OK);
             }
