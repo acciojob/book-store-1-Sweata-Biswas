@@ -48,10 +48,10 @@ public class BookController {
     public ResponseEntity<Book> createBook(@RequestBody Book book){
         // Your code goes here.
         BookController controller = new BookController();
-        book.setId(id);
+        book.setId(getId());
         bookList.add(book);
         setBookList(bookList);
-        id++;
+        this.setId(id++);
         return new ResponseEntity<>(book, HttpStatus.CREATED);
     }
 
@@ -59,27 +59,28 @@ public class BookController {
     // pass id as path variable
     // getBookById()
     @GetMapping("/get-book-by-id/{id}")
-    public ResponseEntity<Book> getBookById(@PathVariable("id") int id){
-        Book book = null;
-        for(Book m : bookList){
-            if(m.getId() == id){
-                book = m;
+    public ResponseEntity<Book> getBookById(@PathVariable() int bookId){
+
+        for(Book book : bookList){
+            if(book.getId() == bookId){
+                return  new ResponseEntity<>(book, HttpStatus.OK);
             }
         }
 
-        return  new ResponseEntity<>(book, HttpStatus.CREATED);
+        return  new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
     // delete request /delete-book-by-id/{id}
     // pass id as path variable
     // deleteBookById()
     @DeleteMapping("/delete-book-by-id/{id}")
-    public ResponseEntity<String> deleteBookById(@PathVariable("id") int id){
+    public ResponseEntity<String> deleteBookById(@PathVariable("id") int bookId){
         for(Book book : bookList){
-            if(book.getId() == id){
+            if(book.getId() == bookId){
                 bookList.remove(book);
+                return  new ResponseEntity<>("Record Deleted of id "+ bookId,HttpStatus.OK);
             }
         }
-        return  new ResponseEntity<>("Record Deleted of id "+ id,HttpStatus.CREATED);
+        return  new ResponseEntity<>("Book not found of id "+ bookId,HttpStatus.NOT_FOUND);
     }
     // get request /get-all-books
     // getAllBooks()
@@ -106,7 +107,7 @@ public class BookController {
                     books.add(m);
                 }
             }
-        return  new ResponseEntity<>(books,HttpStatus.CREATED);
+        return  new ResponseEntity<>(books,HttpStatus.OK);
         }
     // get request /get-books-by-genre
     // pass genre name as request param
@@ -119,6 +120,6 @@ public class BookController {
                 books.add(m);
             }
         }
-        return  new ResponseEntity<>(books,HttpStatus.CREATED);
+        return  new ResponseEntity<>(books,HttpStatus.OK);
     }
 }
